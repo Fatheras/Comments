@@ -1,0 +1,75 @@
+<!--<form action="/submitComment" method="post"> -->
+<div class="form-group">
+  <label for="comment">Comment:</label>
+  <textarea class="form-control" rows="5" name="comment" id="comment" required maxlength="600"></textarea>
+</div>
+<div class="form-group">
+  <label for="usr">Name:</label>
+  <input type="text" class="form-control" name="name" id="name" required maxlength="20">
+</div>
+<button type="submit" id='submitComment' class="btn btn-primary float-right">Comment</button>
+
+<!-- </form> -->
+<!--  <form action="/submitComment2" method="post" enctype="multipart/form-data"> -->
+<label for="exampleFormControlFile1">Example file input</label>
+<input type="file" class="form-control-file" name="file" id="fileInput">
+<button type="submit" id='submitComment2' class="btn btn-primary float-right">Comment</button>
+<!--</form> -->
+<button type="submit" id='displayImage' class="btn btn-primary float-right">display Image</button>
+
+<br>
+<br>
+<br>
+
+
+<script>
+  $('#submitComment').click(function() {
+    $.ajax({
+      type: "POST",
+      url: '/submitComment',
+      contentType: "application/json; charset=utf-8",
+      data: getComment(),
+      dataType: "json"
+    });
+  });
+
+  var getImage = function() {
+    let byteArray = $('#fileInput').prop('files');
+
+    return JSON.stringify(byteArray[0]);
+  }
+
+  $('#submitComment2').click(function() {
+    $.ajax({
+      type: "POST",
+      url: '/submitComment2',
+      contentType: "image/png",//"multipart/form-data; charset=utf-8",
+      data: getImage(),
+        dataType: "json"
+    });
+  });
+
+  var displayImage = function() {
+    var myFile = $('#fileInput').prop('files');
+    document.getElementById("firstComment").src = "data:image/png;base64," + myFile;
+    debugger;
+    $('#firstComment').attr('src', `data:image/png;base64,${myFile}`);
+  }
+
+  $('#displayImage').click(function() {
+    displayImage();
+  });
+
+
+
+  let getComment = function() {
+    let comment = $('#comment').val();
+    let name = $('#name').val();
+    let object = {};
+    object.comment = comment;
+    object.name = name;
+    let obj = JSON.stringify(object);
+    console.log(obj);
+    return obj;
+  }
+</script>
